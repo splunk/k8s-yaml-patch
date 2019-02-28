@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: d1
+  name: d1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: d1
+    spec:
+      containers:
+        - name: main
+          image: nginx:latest
+          imagePullPolicy: Always
+          args:
+            - "--port"
+            - "8080"
+          env:
+            - name: foo
+              value: bar
+            - name: bar
+              value: baz
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: content
+              mountPath: /web
+              readOnly: true
+            - name: logs
+              mountPath: /logs
+        - name: sidecar
+          image: log-forwarder:latest
+          volumeMounts:
+            - name: logs
+              mountPath: /logs
+              readOnly: true
+      serviceAccountName: svc1
+      volumes:
+        - name: content
+          configMap:
+            name: d1-config
+        - name: logs
+          emptyDir: {}

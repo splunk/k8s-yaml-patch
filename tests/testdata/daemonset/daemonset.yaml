@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: ds1
+  name: ds1
+spec:
+  template:
+    metadata:
+      labels:
+        app: ds1
+    spec:
+      containers:
+        - name: main
+          image: nginx:latest
+          imagePullPolicy: Always
+          args:
+            - "--port"
+            - "8080"
+          env:
+            - name: foo
+              value: bar
+            - name: bar
+              value: baz
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: content
+              mountPath: /web
+              readOnly: true
+            - name: logs
+              mountPath: /logs
+        - name: sidecar
+          image: log-forwarder:latest
+          volumeMounts:
+            - name: logs
+              mountPath: /logs
+              readOnly: true
+      serviceAccountName: svc1
+      volumes:
+        - name: content
+          configMap:
+            name: ds1-config
+        - name: logs
+          emptyDir: {}

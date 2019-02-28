@@ -1,0 +1,50 @@
+---
+apiVersion: extensions/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    app: c1
+  name: c1
+spec:
+  schedule: "@hourly"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: c1
+        spec:
+          containers:
+            - name: main
+              image: nginx:latest
+              imagePullPolicy: Always
+              args:
+                - "--port"
+                - "8080"
+              env:
+                - name: foo
+                  value: bar
+                - name: bar
+                  value: baz
+              ports:
+                - containerPort: 8080
+              volumeMounts:
+                - name: content
+                  mountPath: /web
+                  readOnly: true
+                - name: logs
+                  mountPath: /logs
+            - name: sidecar
+              image: log-forwarder:latest
+              volumeMounts:
+                - name: logs
+                  mountPath: /logs
+                  readOnly: true
+          serviceAccountName: svc1
+          volumes:
+            - name: content
+              configMap:
+                name: c1-config
+            - name: logs
+              emptyDir: {}

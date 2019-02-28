@@ -1,0 +1,18 @@
+# yaml with a bunch of null documents thrown in
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: foo
+data:
+  foo: bar
+---
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: foo
+data:
+  foo: YmFy
+---
+---

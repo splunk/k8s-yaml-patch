@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: svc1
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: svc1-config
+data:
+  index.html: insert-real-value-here
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: svc1
+  name: svc1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: svc1
+    spec:
+      containers:
+        - image: nginx:latest
+          imagePullPolicy: Always
+          name: main
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: /web
+              name: content
+              readOnly: true
+      serviceAccountName: svc1
+      volumes:
+        - name: content
+          configMap:
+            name: svc1-config
