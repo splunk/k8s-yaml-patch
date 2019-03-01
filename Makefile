@@ -18,3 +18,7 @@ lint:
 install:
 	go get github.com/golang/dep/cmd/dep
 	go get golang.org/x/lint/golint
+
+.PHONY: clean
+clean:
+	rm -rf vendor/

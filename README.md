@@ -1,6 +1,8 @@
 k8s-yaml-patch
 ===
 
+[![Build Status](https://travis-ci.org/splunk/k8s-yaml-patch.svg?branch=master)](https://travis-ci.org/splunk/k8s-yaml-patch)
+
 _ashes to ashes, dust to dust, YAML to YAML..._
 
 k8s-yaml-patch is a jsonnet library that can patch Kubernetes objects loaded from YAML documents for environment-specific
