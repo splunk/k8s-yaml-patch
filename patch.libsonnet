@@ -173,8 +173,16 @@ local wrapper = {
 };
 
 // k8sMapToList reverses a k8sListToMap operation and returns the list of values from the supplied object in input order.
-// It assumes that no extra keys have been added to the map after creation (these will not be returned).
-local k8sMapToList(map) = std.map(function(name) map[name], map.orderedKeys);
+// Null objects are filtered from the list and objects for keys added after the initial map load are returned at the end. 
+local k8sMapToList = function (input) (
+    local knownKeys = std.set(input.orderedKeys);
+    local allKeys = std.set(std.objectFields(input));
+    local diffs = std.setDiff(allKeys, knownKeys);
+    local baseList = std.map(function(name) input[name], input.orderedKeys);
+    local extraList = std.map(function(name) input[name], diffs);
+    local fullList = baseList + extraList;
+    std.filter(function (input) input != null, fullList)
+);
 
 // k8sMap adds methods to a map of k8s objects keyed by name + kind to produce deployments, config maps etc.
 local k8sMap(object, wrapper) = { orderedKeys:: [] } + object {

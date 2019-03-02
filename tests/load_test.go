@@ -21,6 +21,18 @@ func TestLoadSimple(t *testing.T) {
 	require.Equal(t, 2, len(arr))
 }
 
+func TestLoadDynamicKeys(t *testing.T) {
+	s := newScaffold(t)
+	inYAML := s.canonicalYAML("testdata/load/load.yaml")
+	outYAML := s.evalAsYAML("testdata/load/load-dynamic-keys.jsonnet")
+	diff := s.diffStrings(inYAML, outYAML)
+	expectedDiff := `
+[L]  name: foo
+[R]  name: bar
+`
+	s.assertDiff(expectedDiff, diff)
+}
+
 const yamlDupKeys = `
 apiVersion: v1
 kind: ConfigMap
