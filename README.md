@@ -14,7 +14,7 @@ Conventional wisdom tells us that there are exactly two ways to create K8s objec
 * Create an object from scratch using jsonnet and env-specific params, perhaps using helper libraries like `ksonnet-lib`.
 
 This library does it the third way by loading YAML documents and patching them for environment specific parameters.
-The rationale is that developers get used to the YAML syntax when using `kubectl` for debugging anyway and hiding the 
+The rationale is that developers get used to the YAML syntax when using `kubectl` for debugging anyway and hiding the
 YAML in favor of a DSL does more harm than good.
 
 It is not _elegant_ (it makes some assumptions that can offend purists) or _complete_
@@ -110,9 +110,9 @@ Main ideas
 * Turn a YAML containing multiple documents into a map so that you can pick individual objects
   for patching. The keys in this map are of the form `<object-name>.<kind>`. Specifically, the key does not
   include namespace or API version. This strategy makes cluster and namespaced objects look uniform,
-  allows the namespace to be unspecified in the YAML for default processing and does not depend on 
-  API version that can change over time when upgrading k8s. 
-  
+  allows the namespace to be unspecified in the YAML for default processing and does not depend on
+  API version that can change over time when upgrading k8s.
+
   This sets the limitation that you cannot load a file that contains two objects with the same name and
   kind, differing only in namespace. You'll probably never hit this issue in practice. If you do, just
   load two files into separate objects and concatenate the results in the end.
@@ -135,6 +135,9 @@ attributes that are being customized.
 Available types and methods
 ---
 
-The `jsonnet` files under [tests/testdata](tests/testdata) contain examples of all types and methods supported for 
+The `jsonnet` files under [tests/testdata](tests/testdata) contain examples of all types and methods supported for
 each one. It also has an example of how to extend the library, in the `extending` subdirectory.
 
+### Sign the CLA
+
+Follow the steps here [cla-assistant](https://github.com/splunk/cla-agreement)
